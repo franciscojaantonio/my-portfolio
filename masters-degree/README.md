@@ -1,1 +1,1 @@
-# Projects developed during my Master's Degree [2022 - Current]
+### Projects developed during my Master's Degree [2022 - Current]
