@@ -1,19 +1,3 @@
----
-class: Mobile and Ubiquitous Computing
-term: 2022/23
-skill: Mobile Application Development for Android
-title: "LibrarIST"
-author:
-  - Prof. Luis D. Pedrosa
-  - Prof. João C. Garcia
-assignment: Project
-issued: 2023-05-01
-checkpoint: 2023-05-26
-due: 2023-06-16
-version: 1.0
----
-
-
 # Overview
 
 In this project you will learn how to develop a non-trivial mobile application for the Android Operating System.
