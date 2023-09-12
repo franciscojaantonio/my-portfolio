@@ -1,0 +1,6 @@
+Ana Correira;12345;dentista;aguiar@gmail.com;6;7;200
+João Vieira;98765;clinica geral;vieira@gmail.com;6;8;300
+Paulo Antunes;65536;ortopedia;antunes@gmail.com;4;5;250
+Maria Sousa;16384;cardiologia;sousa@gmail.com;4;8;400
+Luís Silva;32768;dentista;silva@gmail.com;3;9;150
+Francisco D'Oliveira;87392;Pediatra;fja@iscte.pt;0;0;0

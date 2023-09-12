@@ -1,0 +1,3 @@
+Tatiana 252 8 
+Francisco 256 8 
+Rodrigo 270 8 

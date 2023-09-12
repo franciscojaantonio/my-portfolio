@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends "social/main_page.html" %}
+    {% load static %}
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+{% block content %}
+
+    <!-- Onde as mensagens serão apresentadas (com recurso ao Jquery) -->
+    <section id="display" class="card" style="padding: 10px 10px 10px 10px"></section>
+
+{% endblock %}
+
+{% block sidebar_direita %}
+    <section style="width: 90%">
+        {% if request.session.contacto %}
+            <header class="card-header" style="margin-bottom: 20px">
+                <h5 class="text-center" style="padding-top: 10px">
+                    <img src="{% static contacto.imageUrl %}" style="max-width: 30px; max-height: 30px" class="rounded-circle" alt="avatar">
+                    {{ contacto.user.first_name }} {{ contacto.user.last_name }}
+                </h5>
+            </header>
+        {% endif %}
+        <form id="form" action="{% url 'social:sala_mensagens' %}" method="post">
+            {% csrf_token %}
+            <label for="selected" class="form-label">Selecionar contacto</label>
+            <input name="value" id="selected" list="ShowDataList" class="form-control" placeholder="Procurar / Selecionar contacto" autocomplete="off">
+            <datalist id="ShowDataList">
+                {% for contacto in contactos %}
+                    <option data-value="{{ contacto.id }}" value="{{ contacto.user.first_name }} {{ contacto.user.last_name }}">
+                {% endfor %}
+            </datalist>
+            <input id="submit_cont" class="btn btn-outline-primary float-end" type="submit" value="Selecionar">
+        </form>
+        {% if sala %}
+            <form method="post" style="padding-top: 100px" id="msg_form">
+                {% csrf_token %}
+                <label for="textarea" class="form-label">Enviar mensagem</label>
+                <textarea name="textarea" style="max-height: 150px" class="form-control" placeholder="Texto da mensagem" id="texto_comentario" minlength="1" required></textarea>
+                <div class="form-check form-switch float-start py-2">
+                    <input class="form-check-input" type="checkbox" role="switch" id="check_id" checked>
+                    <label class="form-check-label" for="check_id">Focar nas novas mensagens</label>
+                </div>
+                <input type="submit" class="btn btn-primary float-end" value="Enviar">
+            </form>
+        {% endif %}
+    </section>
+{% endblock %}
+
+{% block javascript %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            function update_messages() {
+                $.ajax({
+                    type: 'GET',
+                    url: "{% url 'social:obter_mensagens' sala.id %}",
+                    success: function (response) {
+                        $("#display").empty();
+                        var aux = {{ proprio.id }}
+                        for (var key in response.mensagens) {
+                            var old_date = new Date(response.mensagens[key].datetime.toString())
+                            var date = old_date.getDate()+"/"+(old_date.getMonth()+1)+"/"+old_date.getFullYear()+" "+old_date.getHours()+":"+old_date.getMinutes();
+                            var temp = ""
+                            if (response.mensagens[key].user_id == aux) {
+                                temp = "<div class='card ms-auto' style='width: 45%; margin-bottom: 10px'>"
+                                    + "<div class='card-header'>" + "{{ proprio.user.first_name }} {{ proprio.user.last_name }}" + "</div>"
+                                    + "<div class='card-body' style='background-color: #e8f6fd'>"
+                                    + "<p class='card-text'>" + response.mensagens[key].text + "</p>"
+                                    + "</div>" + "<div class='card-footer text-muted'>" + date + "</div>" + "</div>";
+                            }
+                            else {
+                                temp = "<div class='card' style='width: 45%; margin-bottom: 10px'>"
+                                    + "<div class='card-header'>"
+                                    + "{{ contacto.user.first_name }} {{ contacto.user.last_name }}"
+                                    + "</div>" + "<div class='card-body' style='background-color: #fdfaea'>"
+                                    + "<p class='card-text'>" + response.mensagens[key].text + "</p>"
+                                    + "</div>" + "<div class='card-footer text-muted'>" + date + "</div>" + "</div>";
+                            }
+                            $("#display").append(temp);
+                        }
+                    },
+                    error: function () {
+                        $("#display").empty();
+                        $("#display").append("<h2 class='text-center text-info'>Ainda não existem mensagens com o contacto selecionado!</h2>");
+                    },
+                    async: false
+                });
+                scrollDown()
+            }
+
+            function scrollDown() {
+                if ($('#check_id').is(":checked")) {
+                    $('html, body').scrollTop($(document).height());
+                }
+            }
+
+            window.onload = function () {
+                update_messages();
+                //$('html, body').scrollTop($(document).height());
+            }
+
+            $("#form").submit(function(){
+                const $input = $(this).find("input[name=value]");
+                const value = $('#selected').val();
+                $input.val($('#ShowDataList [value="' + value + '"]').data('value'));
+            });
+
+            setInterval(function () {
+                update_messages()
+            }, 1000);
+
+            $('#msg_form').on('submit', function(e){
+                e.preventDefault();
+                $.ajax({
+                    type : "POST",
+                    url: "{% url 'social:criar_mensagem' sala.id %}",
+                    data: {
+                        text:$('#texto_comentario').val(),
+                        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                    },
+                    success: function(){
+                        $("#texto_comentario").val('');
+                        update_messages()
+                        $('html, body').scrollTop($(document).height());
+                    },
+                    failure: function(data) {
+                        alert(data);
+                    }
+                });
+            });
+
+        });
+    </script>
+{% endblock %}
+
+</body>
+</html>

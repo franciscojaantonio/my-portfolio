@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends "social/main_page.html" %}
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% block content %}
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <input class="nav-link active" id="nav-naoamigos-tab" data-bs-toggle="tab" data-bs-target="#nav-naoamigos" type="button" role="tab" aria-controls="nav-naoamigos" aria-selected="true" value="Encontrar novos amigos">
+            <input class="nav-link" id="nav-pendentes-tab" data-bs-toggle="tab" data-bs-target="#nav-pendentes" type="button" role="tab" aria-controls="nav-pendentes" aria-selected="false" value="Amizades pendentes">
+            <input class="nav-link" id="nav-aceitar-tab" data-bs-toggle="tab" data-bs-target="#nav-aceitar" type="button" role="tab" aria-controls="nav-aceitar" aria-selected="false" value="Aceitar pedidos de amizade">
+        </div>
+    </nav>
+    <section class="tab-content" id="nav-tabContent">
+        <aside class="tab-pane fade show active" id="nav-naoamigos" role="tabpanel" aria-labelledby="nav-naoamigos-tab">
+            <!-- Utilizadores não amigos -->
+            {% if users_list %}
+                <table class="table caption-top mt-2 text-center align-middle">
+                    <caption>Lista de possíveis novos amigos<br>(Clique na imagem de um utilizador para ver o seu perfil)
+                        <div class="input-group mb-3 float-end" style="width: 250px;">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input id="myInput1" class="form-control ds-input float-end" type="text" placeholder="Procurar..">
+                        </div>
+                    </caption>
+                    <thead>
+                    <tr>
+                        <th>Imagem</th>
+                        <th>Primeiro nome</th>
+                        <th>Último nome</th>
+                        <th>Enviar pedido de amizade</th>
+                    </tr>
+                    </thead>
+                    <tbody id="myTable1">
+                    {% for user in users_list %}
+                        <tr>
+                            <td><a href="{% url 'social:ver_perfil_utilizador' user.id %}"><img src="{% static user.imageUrl %}" alt="" height="60px" class="rounded me-2"></a></td>
+                            <td>{{ user.user.first_name }}</td>
+                            <td>{{ user.user.last_name }}</td>
+                            <td>
+                                <a class="text-decoration-none" href="{% url 'social:pedir_amizade' user.id %}">
+                                    <i class="bi bi-person-plus-fill pe-1"></i>
+                                    Pedir amizade
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="text-center py-2 alert alert-info" style="margin-top: 20px" role="alert">
+                    <h4>Não existem utilizadores novos a quem possa solicitar amizade</h4>
+                </div>
+            {% endif %}
+        </aside>
+        <aside class="tab-pane fade" id="nav-pendentes" role="tabpanel" aria-labelledby="nav-pendentes-tab">
+            <!-- Pedidos pendentes -->
+            {% if amigos_pendentes %}
+                <table class="table caption-top mt-2 text-center align-middle">
+                    <caption>Pedidos de amizade pendentes<br>(Clique na imagem de um utilizador para ver o seu perfil)
+                        <div class="input-group mb-3 float-end" style="width: 250px;">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input id="myInput2" class="form-control ds-input float-end" type="text" placeholder="Procurar..">
+                        </div>
+                    </caption>
+                    <thead>
+                    <tr>
+                        <th>Imagem</th>
+                        <th>Primeiro nome</th>
+                        <th>Último nome</th>
+                        <th>Recusar pedido</th>
+                    </tr>
+                    </thead>
+                    <tbody id="myTable2">
+                    {% for pendente in amigos_pendentes %}
+                        <tr>
+                            <td><a href="{% url 'social:ver_perfil_utilizador' pendente.id %}"><img src="{% static pendente.imageUrl %}" height="60px" class="rounded me-2"></a></td>
+                            <td>{{ pendente.user.first_name }}</td>
+                            <td>{{ pendente.user.last_name }}</td>
+                            <td>
+                                <a class="text-decoration-none" href="{% url 'social:remover_pedido' pendente.id %}">
+                                    <i class="bi bi-person-x-fill pe-1"></i>
+                                    Cancelar pedido
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="text-center py-2 alert alert-info" style="margin-top: 20px" role="alert">
+                    <h4>Não tem amizades pendentes</h4>
+                </div>
+            {% endif %}
+        </aside>
+        <aside class="tab-pane fade" id="nav-aceitar" role="tabpanel" aria-labelledby="nav-aceitar-tab">
+            <!-- Aceitar pendentes -->
+            {% if para_aceitar %}
+                <table class="table caption-top mt-2 text-center align-middle">
+                    <caption>Aceitar pedidos de amizade pendentes<br>(Clique na imagem de um utilizador para ver o seu perfil)
+                        <div class="input-group mb-3 float-end" style="width: 250px;">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input id="myInput3" class="form-control ds-input float-end" type="text" placeholder="Procurar..">
+                        </div>
+                    </caption>
+                    <thead>
+                    <tr>
+                        <th>Imagem</th>
+                        <th>Primeiro nome</th>
+                        <th>Último nome</th>
+                        <th>Aceitar pedido</th>
+                    </tr>
+                    </thead>
+                    <tbody id="myTable3">
+                    {% for pendente in para_aceitar %}
+                        <tr>
+                            <td><a href="{% url 'social:ver_perfil_utilizador' pendente.id %}"><img src="{% static pendente.imageUrl %}" height="60px" class="rounded me-2" alt="Imagem do utilizador"></a></td>
+                            <td>{{ pendente.user.first_name }}</td>
+                            <td>{{ pendente.user.last_name }}</td>
+                            <td>
+                                <a class="text-decoration-none" href="{% url 'social:aceitar_pedido' pendente.id %}">
+                                    <i class="bi bi-person-check-fill pe-1"></i>
+                                    Aceitar pedido
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="text-center py-2 alert alert-info" style="margin-top: 20px" role="alert">
+                    <h4>Não tem pedidos de amizade por aceitar</h4>
+                </div>
+            {% endif %}
+        </aside>
+    </section>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+
+            $("#myInput1").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable1 tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            $("#myInput2").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable2 tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            $("#myInput3").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable3 tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+        });
+    </script>
+{% endblock %}
+</body>
+</html>

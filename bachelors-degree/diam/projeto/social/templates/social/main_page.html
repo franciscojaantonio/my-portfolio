@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Social Core{% endblock %}</title>
+    {% load static %}
+    {% load obter_interacao from tags %}
+    <link rel="icon" type="image/x-icon" href="{% static 'social/images/logo.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'social/css/style.css' %}"/>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+{% block header %}
+    <header class="fixed-top" style="height: 150px" id="header">
+        <section class="py-2 bg-dark border-bottom">
+            <div class="container-fluid d-flex flex-wrap">
+                <nav class="nav me-auto">
+                    <a href="{% url 'social:sobre' %}" class="nav-item nav-link link-light px-3" style="height: 20px">
+                        <img class="pb-1 pe-1" src="{% static 'social/images/logo_white.png' %}" alt="logo" style="height: 30px">
+                        <strong>Social Core</strong>
+                    </a>
+                    <a href="{% url 'social:mainpage' %}" class="nav-item nav-link link-light px-2 pe-3">
+                        <i class="bi bi-house-door-fill pe-1"></i>
+                        Início
+                    </a>
+                </nav>
+                <nav class="nav">
+                    <a href="{% url 'social:fazerlogout' %}" class="nav-item nav-link link-light px-3">
+                        <i class="bi bi-box-arrow-right pe-1"></i>
+                        Logout
+                    </a>
+                </nav>
+            </div>
+        </section>
+        <section class="py-2 mb-4 border-bottom" style="background-color: whitesmoke">
+            <nav class="container-fluid d-flex">
+                <a href="{% url 'social:ver_perfil' %}" class="d-flex align-items-center me-lg-auto text-dark text-decoration-none">
+                    <img src="{% static request.user.utilizador.imageUrl %}" alt="" class="rounded-circle mx-auto ps-2" style="max-height: 50px">
+                    {% if request.user.is_superuser %}
+                        <h4 class="ps-3 text-danger">{{ request.user.first_name }} {{ request.user.last_name }}</h4>
+                    {% else %}
+                        <h4 class="ps-3">{{ request.user.first_name }} {{ request.user.last_name }}</h4>
+                    {% endif %}
+                </a>
+                <div class="input-group center_vertical me-3" style="width: 250px;">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input id="search_pub" class="form-control ds-input float-end" type="text" placeholder="Procurar publicação...">
+                </div>
+                <form class="d-flex" method="post" action="{% url 'social:mainpage' %}">
+                    {% csrf_token %}
+                    <div class="center_vertical pe-3">
+                        <select id="filtro_sort" name="sort" class="form-select" aria-label="Default select example">
+                            <option selected>Ordenar publicações por</option>
+                            <option value="1">Mais recente</option>
+                            <option value="2">Mais antigo</option>
+                            <option value="3">Likes</option>
+                            <option value="4">Dislikes</option>
+                            <option value="5">Comentários</option>
+                        </select>
+                    </div>
+                    <div class="center_vertical pe-3">
+                        <select id="filtro_time" name="time" class="form-select" aria-label="Default select example">
+                            <option selected>Período de tempo</option>
+                            <option value="1">Últimas 24h</option>
+                            <option value="2">Últimos 3 dias</option>
+                            <option value="3">Última semana</option>
+                            <option value="4">Último mês</option>
+                            <option value="5">Desde sempre</option>
+                        </select>
+                    </div>
+                    {% if filtro %}
+                        <a href="{% url 'social:reset_filter' %}" class="btn btn-outline-secondary center_vertical me-3">Eliminar filtro</a>
+                    {% endif %}
+                    <input value="Aplicar filtro" type="submit" class="btn btn-secondary center_vertical me-3">
+                </form>
+                <!-- Button trigger modal -->
+                <a class="btn btn-primary center_vertical me-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="height: 60%">
+                    <i class="bi bi-file-earmark-post"></i>
+                    Criar nova publicação
+                </a>
+            </nav>
+        </section>
+    </header>
+{% endblock %}
+
+<section class="container-fluid" style="padding-top: 140px">
+
+    <section class="row">
+
+        <!-- Sidebar -->
+        <section class="col-md-3">
+            <aside class="col-lg-2 text-black sidebar" style="position: fixed; height: calc(100vh - 140px); width: inherit">
+                <nav class="list-group list-group-light overflow-auto" style="width: 90%; height: inherit">
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'social:mainpage' %}">
+                        <i class="bi bi-house pe-2"></i>
+                        Página inicial
+                    </a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'social:encontrar_amigos' %}">
+                        <i class="bi bi-person-plus pe-2"></i>
+                        Encontrar amigos
+                    </a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'social:ver_perfil' %}">
+                        <i class="bi bi-person pe-2"></i>
+                        Dados do Utilizador
+                    </a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'social:sala_mensagens' %}">
+                        <i class="bi bi-chat-text pe-2"></i>
+                        Conversas
+                    </a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'social:eventos' %}">
+                        <i class="bi bi-balloon pe-2"></i>
+                        Lista de eventos
+                    </a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'social:reportbug' %}">
+                        <i class="bi bi-bug pe-2"></i>
+                        Reportar problema
+                    </a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'social:sobre' %}">
+                        <i class="bi bi-info-circle pe-2"></i>
+                        Sobre
+                    </a>
+                </nav>
+            </aside>
+        </section>
+
+        <!-- Formulário para criar publicação (Não visível -> É um modal) -->
+        <section class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Criar nova publicação</h5>
+                        <input type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </div>
+                    <form class="needs-validation" method="post" action="{% url 'social:criar_publicacao' %}" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label" for="title">Title</label>
+                                <input type="text" class="form-control" name="title" id="title" required>
+                                <div class="invalid-feedback">
+                                    Por favor dê um título à publicação
+                                </div>
+                                <div class="valid-feedback">
+                                    Título válido
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="textarea" class="form-label">Texto da publicação</label>
+                                <textarea style="max-height: 200px" class="form-control" id="textarea" name="textarea" required></textarea>
+                                <div class="invalid-feedback">
+                                    Por favor preencha o texto da publicação
+                                </div>
+                                <div class="valid-feedback">
+                                    Texto válido
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="myvideo" class="form-label">Link do vídeo no YouTube (Opcional)</label>
+                                <input type="url" name="myvideo" id="myvideo" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="myfile" class="form-label">Image (Opcional)</label>
+                                <input type="file" name="myfile" id="myfile" class="form-control">
+                            </div>
+                            <p class="text-muted text-center">(Caso introduza imagem e vídeo, apenas será publicado o vídeo)
+                                <br>(Ambos são opcionais)
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <input type="submit" value="Publicar" class="btn btn-primary">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Restante ecrã, sem a sidebar da esquerda -->
+        {% block direita %}
+            <!-- Criar publicação -->
+            <section class="col-md-6">
+                {% block content %}
+                    <!-- Ver publicacoes de amigos e admin -->
+                    {% if pubs_list %}
+                        <section id="search_output">
+                            {% for pub in pubs_list %}
+                                <article id="pub#{{ pub.id }}" class="card mx-auto mb-5" style="max-width: 70%">
+                                    <div class="card-body d-flex flex-row" style="background-color: #f3f3f3">
+                                        <img src="{% static pub.user.imageUrl %}" class="rounded-circle me-3" height="50px" width="50px" alt="avatar">
+                                        <span>
+                                            {% if pub.user.id == request.user.utilizador.id %}
+                                                <a href="{% url 'social:ver_perfil' %}" style="text-decoration: none" class="text-black"><h5 class="card-title font-weight-bold mb-2 pub_search_content">{{ pub.user.user.first_name }} {{ pub.user.user.last_name }}</h5></a>
+                                            {% else %}
+                                                <a href="{% url 'social:ver_perfil_utilizador' pub.user.id %}" style="text-decoration: none" class="text-black"><h5 class="card-title font-weight-bold mb-2 pub_search_content">{{ pub.user.user.first_name }} {{ pub.user.user.last_name }}</h5></a>
+                                            {% endif %}
+                                            <p class="card-text pub_search_content"><i class="bi bi-clock pe-2"></i>{{ pub.date|date:"d/m/Y H:i" }}</p>
+                                        </span>
+                                        {% if request.user.is_superuser or request.user.utilizador == pub.user %}
+                                            <a href="{% url 'social:eliminar_publicacao' pub.id %}" style="text-decoration: none" class="ms-auto btn btn-outline-secondary h-50"><i class="bi bi-trash text-muted" style="font-style: normal">Eliminar</i></a>
+                                        {% endif %}
+                                    </div>
+                                    {% if pub.imageUrl is not None %}
+                                        <div class="bg-image hover-overlay ripple rounded-0 text-center bg-light" data-mdb-ripple-color="light">
+                                            <img style="max-height: 40vh" class="img-fluid" src="{% static pub.imageUrl %}" alt="Card image cap" />
+                                        </div>
+                                    {% endif %}
+                                    {% if pub.videoUrl != 'none' %}
+                                        <div class="text-center embed-responsive embed-responsive-16by9">
+                                            <iframe width="490px" height="300px" class="embed-responsive-item" src="https://www.youtube.com/embed/{{ pub.videoUrl }}?rel=0" allowfullscreen></iframe>
+                                        </div>
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <p class="card-text pub_search_content" style="text-decoration: none">
+                                            <span class="h5">{{ pub.title }}<br></span>
+                                            {{ pub.text }}
+                                        </p>
+                                        <div class="d-flex justify-content-end ">
+                                            <!-- Link triggers collapse -->
+                                            <script>function update_scroll(value) {
+                                                $.ajax({
+                                                    type: 'GET',
+                                                    url: "/social/mainpage/atualizar_scroll/".concat(value.toString()),
+                                                    success: function (response) {},
+                                                    error: function () {}
+                                                });
+                                            }
+                                            </script>
+                                            <a onclick="update_scroll({{ pub.id }})" class="me-auto" style="text-decoration: none" data-bs-toggle="collapse" href="#collapseComments{{ pub.id }}" role="button" aria-expanded="false" aria-controls="collapseComments{{ pub.id }}">Ver comentários ({{ pub.num_coms }})</a>
+                                            {% obter_interacao request.user.utilizador.id pub.id as option %}
+                                            {% if option is None %}
+                                                <p>{{ pub.gostos }}<a href="{% url 'social:dar_gosto' pub.id %}" class="text-muted bi bi-heart-fill" style="padding: 0 10px 0 5px"></a></p>
+                                                <p>{{ pub.nao_gostos }}<a href="{% url 'social:dar_nao_gosto' pub.id %}" class="text-muted bi bi-heartbreak-fill" style="padding: 0 10px 0 5px"></a></p>
+                                            {% elif option %}
+                                                <p>{{ pub.gostos }}<a href="{% url 'social:dar_gosto' pub.id %}" class="bi bi-heart-fill" style="padding: 0 10px 0 5px; color: red"></a></p>
+                                                <p>{{ pub.nao_gostos }}<a href="{% url 'social:dar_nao_gosto' pub.id %}" class="text-muted bi bi-heartbreak-fill" style="padding: 0 10px 0 5px"></a></p>
+                                            {% elif not option %}
+                                                <p>{{ pub.gostos }}<a href="{% url 'social:dar_gosto' pub.id %}" class="text-muted bi bi-heart-fill" style="padding: 0 10px 0 5px"></a></p>
+                                                <p>{{ pub.nao_gostos }}<a href="{% url 'social:dar_nao_gosto' pub.id %}" class="bi bi-heartbreak-fill" style="padding: 0 10px 0 5px; color: #000000"></a></p>
+                                            {% endif %}
+                                        </div>
+                                        <!-- Collapsed content - Comentários -->
+                                        <section class="collapse overflow-auto" id="collapseComments{{ pub.id }}" style="max-height: 400px">
+                                            <form class="form-floating py-2" method="post" action="{% url 'social:criar_comentario' pub.id %}">
+                                                {% csrf_token %}
+                                                <textarea name="textarea" style="max-height: 100px" class="form-control" placeholder="Texto do comentário" id="textarea" minlength="2" required></textarea>
+                                                <label class="text-muted" for="textarea">Deixe aqui o seu comentário</label>
+                                                <input type="submit" class="float-end btn text-primary" value="Publicar">
+                                            </form>
+                                            <hr>
+                                            {% for com in comentarios %}
+                                                {% if com.publicacao.id == pub.id %}
+                                                    <article class="card card-body mb-1">
+                                                        <p><img style="max-height: 20px; max-width: 20px; margin-right: 6px" src="{% static com.user.imageUrl %}" alt=""><strong>{{ com.user }}:</strong> {{ com.text }}</p>
+                                                        <p class="text-muted">{{ com.datetime|date:"d/m/Y H:i" }}
+                                                            {% if request.user.is_superuser or request.user.utilizador == com.user %}
+                                                                <a href="{% url 'social:eliminar_comentario' com.id %}" class="float-end h-50 text-muted" style="text-decoration: none"><i class="bi bi-trash"></i>Eliminar</a>
+                                                            {% endif %}
+                                                        </p>
+                                                    </article>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </section>
+                                    </div>
+                                </article>
+                            {% endfor %}
+                        </section>
+                    {% endif %}
+                {% endblock %}
+            </section>
+
+            <!-- Right side Notificações -->
+            <section class="col-md-3">
+                <aside class="position-fixed" style="height: calc(80vh - 140px); width: inherit">
+                    {% block sidebar_direita %}
+                        {% if notifications %}
+                            <nav class="overflow-auto" style="width: 90%; max-height: 100%">
+                                <h4 class="text-center border">Notificações</h4>
+                                {% for noti in notifications %}
+                                    <a href="{% url 'social:remover_notificao' noti.id %}" class="list-group-item list-group-item-action py-2 lh-tight">
+                                        <div class="d-flex w-100 align-items-center justify-content-between">
+                                            <strong class="mb-1">{{ noti.title }}</strong>
+                                            <small class="text-muted">{{ noti.date|timesince }}</small>
+                                        </div>
+                                        <div class="col-10 mb-1 small">{{ noti.text }}</div>
+                                    </a>
+                                {% endfor %}
+                            </nav>
+                            <nav style="width: 90%">
+                                <a href="{% url 'social:remover_todas_notificoes' %}" class="btn btn-secondary mt-3">
+                                    <i class="bi bi-trash pe-1"></i>
+                                    Limpar notificações
+                                </a>
+                                <a href="#footer" class="text-decoration-none mt-3 ms-3 me-2 text-secondary float-end">
+                                    <i class="bi bi-arrow-down-circle h2"></i>
+                                </a>
+                                <a href="#top" class="text-decoration-none mt-3 float-end">
+                                    <i class="bi bi-arrow-up-circle h2"></i>
+                                </a>
+                            </nav>
+                        {% else %}
+                            <div class="alert alert-info alert-dismissible fade show" role="alert" style="width: 90%">
+                                Não tem novas notificações
+                                <i class="bi bi-mailbox ps-2"></i>
+                                <input type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                            </div>
+                            <nav style="width: 90%">
+                                <a href="#footer" class="text-decoration-none mt-3 ms-3 me-2 text-secondary float-end">
+                                    <i class="bi bi-arrow-down-circle h2"></i>
+                                </a>
+                                <a href="#top" class="text-decoration-none mt-3 float-end">
+                                    <i class="bi bi-arrow-up-circle h2"></i>
+                                </a>
+                            </nav>
+                        {% endif %}
+                    {% endblock %}
+                </aside>
+            </section>
+        {% endblock %}
+    </section>
+</section>
+
+{% block footer %}
+    <footer class="footer mt-auto text-center p-3" style="background-color: #e5e5e5; width: 100%" id="footer">
+        <p class="text-muted center_vertical">© 2022 Social Core - Desenvolvimento para a Internet e Aplicações Móveis</p>
+    </footer>
+{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+
+            var scroll_id = '{{ request.session.jump_to }}';
+            if (scroll_id) {
+                var scrollDiv = document.getElementById(scroll_id).offsetTop - 150;
+                //alert(scrollDiv)
+                if (scrollDiv != null) {
+                    window.scrollTo({
+                        top: scrollDiv,
+                        behavior: 'instant'
+                        //behavior: 'smooth'
+                    });
+                }
+            }
+
+            var sort = '{{ request.session.sort }}';
+            var time = '{{ request.session.time }}';
+
+            if (sort && time) {
+                $('#filtro_sort').val(sort);
+                $('#filtro_time').val(time);
+            }
+
+            $("#search_pub").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#search_output article").filter(function() {
+                    $(this).toggle($(this).find(".pub_search_content").text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+        });
+    </script>
+{% endblock %}
+
+</body>
+</html>

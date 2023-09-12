@@ -1,0 +1,7 @@
+use admin
+db.createuser({ user:"root", pwd:"abc", roles:[
+{role:"userAdminAnyDatabase",db:"admin"},
+{role:"dbAdminAnyDatabase",db:"admin"},
+{role:"readWriteAnyDatabase",db:"admin"},
+{role:"clusterAdmin",db:"admin"},
+] })

@@ -1,0 +1,14 @@
+Utilizadores Social Core (username/password):
+	
+	Utilizadores normais:
+		francisco/123
+		tatiana/tatiana
+		tomas/tomas
+		antonio/antonio
+		marco/marco
+		miguel/miguel
+
+	Administrador:
+		admin/admin
+
+Grupo-LEI-10

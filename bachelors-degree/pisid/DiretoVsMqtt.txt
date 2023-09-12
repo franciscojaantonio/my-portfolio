@@ -1,0 +1,18 @@
+direto
+44 doc 465 ms
+59 doc 523 ms
+65 doc 489 ms
+60 doc 425 ms
+59 doc 389 ms
+total:
+287 doc 2291 ms ~ 7.98 ms/doc
+
+mqtt
+46 doc 555 ms
+60 doc 519 ms
+59 doc 548 ms
+60 doc 424 ms
+59 doc 440 ms
+toral:
+284 doc 2486 ms ~ 8.75 ms/doc
+

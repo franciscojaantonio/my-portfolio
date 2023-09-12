@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends "social/main_page.html" %}
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% block direita %}
+    <section class="col-md-9">
+        <article class="container">
+            <div class="row flex-lg-row-reverse align-items-center g-5 py-5 center_vertical">
+                <figure class="col-10 col-sm-8 col-lg-6">
+                    <img src="{% static 'social/images/bg.jpg' %}" class="d-block mx-lg-auto img-fluid rounded" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+                </figure>
+                <article class="col-lg-6">
+                    <h1 class="display-5 fw-bold lh-1 mb-3">
+                        <img src="{% static 'social/images/logo.png' %}" alt="logo" style="width: 90px; height: 90px">
+                        <span class="text-primary">Social Core</span><br>A tua rede social de confiança
+                    </h1>
+                    <p class="lead">Uma nova rede social que junta tudo aquilo que precisas! Fala com os teus amigos, partilha momentos, comenta e reage. Tens tanto para fazer. Um projeto elaborado no âmbito da Unidade Curricular de Desenvolvimento para a Internet e Aplicações Móveis</p>
+                </article>
+            </div>
+        </article>
+    </section>
+{% endblock %}
+
+</body>
+</html>

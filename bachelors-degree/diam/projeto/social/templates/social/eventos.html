@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends "social/main_page.html" %}
+    {% load static %}
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+{% block direita %}
+
+    <section class="col-md-9">
+
+        <article class="mx-auto" style="width: 90%">
+            <!-- Tabs -->
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <input class="nav-link active" id="nav-lista-tab" data-bs-toggle="tab" data-bs-target="#nav-lista" type="button" role="tab" aria-controls="nav-lista" aria-selected="true" value="Lista dos próximos eventos">
+                    <input class="nav-link" id="nav-criar-tab" data-bs-toggle="tab" data-bs-target="#nav-criar" type="button" role="tab" aria-controls="nav-criar" aria-selected="true" value="Criar novo evento">
+                </div>
+            </nav>
+            <!-- Conteúdo dos Tabs -->
+            <div class="tab-content" id="nav-tabContent">
+                <aside class="tab-pane fade show active" id="nav-lista" role="tabpanel" aria-labelledby="nav-lista-tab">
+                    {% if eventos %}
+                        <h3 class="text-center mt-3">Lista dos próximos eventos</h3>
+                        <table class="table text-center align-middle w-100" style="border-collapse: separate; border-spacing: 0 15px; table-layout: fixed">
+                            <thead class="bg-primary text-white">
+                            <tr>
+                                <th scope="col" class="text-start">Publicado por</th>
+                                <th scope="col">Tempo restante</th>
+                                <th scope="col">Data</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Descrição</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for evento in eventos %}
+                                <tr>
+                                    <th scope="row" class="text-start">
+                                        <img src="{% static evento.user.imageUrl %}" height="30px">
+                                        {{ evento.user.user.first_name }} {{ evento.user.user.last_name }}
+                                    </th>
+                                    <td>{{ evento.datetime|timeuntil }}</td>
+                                    <td>
+                                        {% if evento.is_aniversario %}
+                                            {{ evento.datetime|date:"d/m/Y" }}
+                                        {% else %}
+                                            {{ evento.datetime|date:"d/m/Y H:i" }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ evento.tipo }}</td>
+                                    <td>{{ evento.descricao }}</td>
+                                    <td>
+                                        {% if request.user.is_superuser or request.user.utilizador == evento.user %}
+                                            <a class="text-decoration-none" href="{% url 'social:eliminar_evento' evento.id %}">
+                                                <i class="bi bi-trash"></i>
+                                                Apagar
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <h3 class="text-center mt-3">Ainda não existem eventos próximos</h3>
+                    {% endif %}
+                </aside>
+
+                <aside class="tab-pane fade " id="nav-criar" role="tabpanel" aria-labelledby="nav-criar-tab">
+                    <form  method="post" action="{% url 'social:criar_evento' %}">
+                        {% csrf_token %}
+                        <fieldset>
+                            <legend class="ps-3 pe-3 pb-1 pt-3">Criar novo evento</legend>
+
+                            <div class="ps-3 pe-3 mb-3">
+                                <label for="title" class="form-label">Tipo de evento</label>
+                                <input type="text" name="tipo" id="title" class="form-control" required>
+                            </div>
+                            <div class="ps-3 pe-3 mb-3">
+                                <label for="assunto" class="form-label">Descrição do evento</label>
+                                <textarea style="max-height: 200px" type="text" id="assunto" name="descricao" class="form-control" required></textarea>
+                            </div>
+                            <div class="ps-3 pe-3 mb-3">
+                                <label for="dataaniv" class="form-label">Data e hora do evento</label>
+                                <input id="dataaniv" type="datetime-local" class="form-control" name="data" style="width: 250px" required>
+                            </div>
+                            <input type="submit" class="btn btn-primary ms-3" value="Enviar">
+                        </fieldset>
+                    </form>
+                </aside>
+            </div>
+        </article>
+
+    </section>
+
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Social Core</title>
+    {% extends "social/main_page.html" %}
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+</head>
+<body>
+{% block content %}
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <input class="nav-link active" id="nav-enviarticket-tab" data-bs-toggle="tab" data-bs-target="#nav-enviarticket" type="button" role="tab" aria-controls="nav-enviarticket" aria-selected="true" value="Enviar ticket">
+            <input class="nav-link" id="nav-ticketativos-tab" data-bs-toggle="tab" data-bs-target="#nav-ticketativos" type="button" role="tab" aria-controls="nav-ticketativos" aria-selected="true" value="Os meus tickets">
+            {% if request.user.is_superuser %}
+                <input class="nav-link" id="nav-ativos-tab" data-bs-toggle="tab" data-bs-target="#nav-ativos" type="button" role="tab" aria-controls="nav-ativos" aria-selected="true" value="Tickets ativos">
+                <input class="nav-link" id="nav-alltickets-tab" data-bs-toggle="tab" data-bs-target="#nav-alltickets" type="button" role="tab" aria-controls="nav-alltickets" aria-selected="true" value="Todos os tickets">
+            {% endif %}
+        </div>
+    </nav>
+
+    <section class="tab-content" id="nav-tabContent">
+
+        <aside class="tab-pane fade show active" id="nav-enviarticket" role="tabpanel" aria-labelledby="nav-enviarticket-tab">
+            <form  method="post" action="{% url 'social:enviarticket' %}">
+                {% csrf_token %}
+                <fieldset>
+                    <legend class="ps-3 pe-3 pb-1 pt-3">Reportar problema</legend>
+
+                    <div class="ps-3 pe-3 mb-3">
+                        <label for="title" class="form-label">Assunto</label>
+                        <input type="text" name="title" id="title" class="form-control">
+                    </div>
+                    <div class="ps-3 pe-3 mb-3">
+                        <label for="assunto" class="form-label">Descrição do problema</label>
+                        <textarea style="max-height: 200px" type="text" id="assunto" name="assunto" class="form-control"></textarea>
+                    </div>
+
+                    <input type="submit" class="btn btn-primary ms-3" value="Enviar">
+                </fieldset>
+            </form>
+        </aside>
+
+        <aside class="tab-pane fade " id="nav-ticketativos" role="tabpanel" aria-labelledby="nav-ticketativos-tab">
+            {% if request.user.utilizador.ticket_set.all %}
+                <nav class="mt-4 ms-3 me-3">
+                    {% for ticket in request.user.utilizador.ticket_set.all %}
+                        {% if ticket.closed %}
+                            <a class="text-success" href="{% url 'social:ticketresolve' ticket.id %}" style="text-decoration: none">
+                                <p style="font-size: large">{{ ticket.datetime|date:"d/m/Y" }} - Ver estado do ticket: {{ ticket.title }}</p>
+                            </a>
+                        {% else %}
+                            <a class="text-warning" href="{% url 'social:ticketresolve' ticket.id %}" style="text-decoration: none">
+                                <p style="font-size: large">{{ ticket.datetime|date:"d/m/Y" }} - Ver estado do ticket: {{ ticket.title }}</p>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </nav>
+            {% endif %}
+        </aside>
+
+        <aside class="tab-pane fade " id="nav-ativos" role="tabpanel" aria-labelledby="nav-ativos-tab">
+            <nav class="mt-4 ms-3 me-3">
+                {% if ticket_list_ativos %}
+                    {% for ticket in ticket_list_ativos %}
+                        <div class="mb-3">
+                            <a href="{% url 'social:ticketresolve' ticket.id %}" style="text-decoration: none">
+                                <img src="{% static ticket.user.imageUrl %}" alt="" width="30" class="rounded me-2">{{ ticket.user.user.first_name }} {{ ticket.user.user.last_name }} enviou um ticket - {{ ticket.datetime|date:"d/m/Y" }}
+                            </a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <h2>Ainda não existem tickets</h2>
+                {% endif %}
+            </nav>
+        </aside>
+
+        <aside class="tab-pane fade " id="nav-alltickets" role="tabpanel" aria-labelledby="nav-alltickets-tab">
+            <nav class="mt-4 ms-3 me-3">
+                {% for ticket in ticket_list %}
+                    {% if ticket.closed %}
+                        <a class="text-success" href="{% url 'social:ticketresolve' ticket.id %}" style="text-decoration: none">
+                            <p style="font-size: large">{{ ticket.datetime|date:"d/m/Y" }} - Ver estado do ticket: {{ ticket.title }}</p>
+                        </a>
+                    {% else %}
+                        <a class="text-warning" href="{% url 'social:ticketresolve' ticket.id %}" style="text-decoration: none">
+                            <p style="font-size: large">{{ ticket.datetime|date:"d/m/Y" }} - Ver estado do ticket: {{ ticket.title }}</p>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </nav>
+        </aside>
+    </section>
+
+{% endblock %}
+
+
+</body>
+</html>

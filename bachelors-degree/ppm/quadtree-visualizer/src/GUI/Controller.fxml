@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="rootAP" minHeight="300.0" minWidth="300.0" prefHeight="480.0" prefWidth="720.0" styleClass="body-background" stylesheets="@style.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
+   <children>
+      <BorderPane fx:id="borderPane1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" prefHeight="480.0" prefWidth="720.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+          <top>
+              <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
+                  <menus>
+                      <Menu mnemonicParsing="false" text="File">
+                          <items>
+                              <MenuItem fx:id="menuClose" mnemonicParsing="false" onAction="#menuClose" text="Close" />
+                              <MenuItem fx:id="newImage" mnemonicParsing="false" onAction="#newImage" text="New Image" />
+                              <MenuItem fx:id="saveButton" mnemonicParsing="false" onAction="#saveFiles" text="Save" />
+                        <MenuItem fx:id="load" mnemonicParsing="false" onAction="#reloadFiles" text="Load from files" />
+                          </items>
+                     <graphic>
+                        <ImageView fx:id="fileImage" fitHeight="19.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../GUI_Content/menu.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                      </Menu>
+                  </menus>
+              </MenuBar>
+          </top>
+         <right>
+            <VBox alignment="CENTER" prefHeight="410.0" prefWidth="170.0" spacing="25.0" style="-fx-background-color: #568259;" BorderPane.alignment="CENTER">
+               <children>
+                  <Label alignment="CENTER" prefHeight="1.0" prefWidth="121.0" text="Edit Album" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Leelawadee UI Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="renameAlbumButton" mnemonicParsing="false" onMouseClicked="#renameAlbumOnClicked" prefHeight="40.0" prefWidth="120.0" text="Rename">
+                     <font>
+                        <Font name="Leelawadee UI Bold" size="13.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fx:id="renameAlbumImage" fitHeight="22.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../GUI_Content/rename.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="resetAlbumButton" layoutX="35.0" layoutY="75.0" mnemonicParsing="false" onMouseClicked="#resetAlbumOnClicked" prefHeight="40.0" prefWidth="120.0" text="Reset" textAlignment="CENTER">
+                     <font>
+                        <Font name="Leelawadee UI Bold" size="13.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fx:id="resetAlbumImage" fitHeight="22.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../GUI_Content/reset.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Pane prefHeight="1.0" prefWidth="160.0" />
+                  <Label alignment="CENTER" layoutX="35.0" layoutY="20.0" prefHeight="45.0" prefWidth="141.0" text="Current Image Info" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Leelawadee UI Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="imageInfo" prefHeight="87.0" prefWidth="203.0" style="-fx-background-color: #9DBF9E;">
+                     <font>
+                        <Font name="Leelawadee UI Bold" size="14.0" />
+                     </font>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+               </children>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+               <padding>
+                  <Insets left="5.0" right="5.0" top="10.0" />
+               </padding>
+            </VBox>
+         </right>
+         <left>
+            <VBox alignment="CENTER" prefHeight="410.0" prefWidth="170.0" spacing="30.0" style="-fx-background-color: #464E47;" stylesheets="@style.css" BorderPane.alignment="CENTER">
+               <children>
+                  <Label alignment="CENTER" prefHeight="15.0" prefWidth="121.0" text="Edit Images" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Leelawadee UI Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="scene1Button" mnemonicParsing="false" onMouseClicked="#changeToScene2" prefHeight="40.0" prefWidth="120.0" text="Show Grid">
+                     <font>
+                        <Font name="Leelawadee UI Bold" size="13.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fx:id="gridImage" fitHeight="22.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../GUI_Content/grid.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="remove" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#onRemoveClick" prefHeight="40.0" prefWidth="120.0" stylesheets="@style.css" text="Remove">
+                     <font>
+                        <Font name="Leelawadee UI Bold" size="13.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fx:id="removeImage" fitHeight="31.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../GUI_Content/remove.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="reset" mnemonicParsing="false" onMouseClicked="#onResetClicked" prefHeight="40.0" prefWidth="120.0" text="Reset">
+                     <font>
+                        <Font name="Leelawadee UI Bold" size="13.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fx:id="resetImage" fitHeight="21.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../GUI_Content/reset.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <MenuButton contentDisplay="CENTER" mnemonicParsing="false" popupSide="RIGHT" prefHeight="40.0" prefWidth="120.0" text="Effects" textAlignment="CENTER">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#onScaleClick" text="Scale" />
+                      <MenuItem mnemonicParsing="false" onAction="#onMirrorHClick" text="MirrorH" />
+                      <MenuItem mnemonicParsing="false" onAction="#onRotateLClick" text="RotateL" />
+                        <MenuItem mnemonicParsing="false" onAction="#onMirrorVClick" text="MirrorV" />
+                        <MenuItem mnemonicParsing="false" onAction="#onRotateRClick" text="RotateR" />
+                        <MenuItem fx:id="noise" mnemonicParsing="false" onAction="#onNoiseClick" text="Noise" />
+                        <MenuItem fx:id="sepia" mnemonicParsing="false" onAction="#onSepiaClick" text="Sepia" />
+                        <MenuItem fx:id="contrast" mnemonicParsing="false" onAction="#onContrastClick" text="Contrast" />
+                    </items>
+                     <font>
+                        <Font name="Leelawadee UI Bold" size="13.0" />
+                     </font>
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="103.0">
+                           <children>
+                              <ImageView fx:id="effectsImage" fitHeight="23.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../GUI_Content/edit.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                     </graphic>
+                  </MenuButton>
+                  <Button fx:id="renameButton" layoutX="35.0" layoutY="122.0" mnemonicParsing="false" onMouseClicked="#renameImageOnClicked" prefHeight="40.0" prefWidth="120.0" text="Rename">
+                     <font>
+                        <Font name="Leelawadee UI Bold" size="13.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fx:id="renameImage" fitHeight="22.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../GUI_Content/rename.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+            </VBox>
+         </left>
+         <bottom>
+            <BorderPane style="-fx-background-color: #90AA86;" BorderPane.alignment="CENTER">
+               <left>
+                  <Label fx:id="indexInfo" prefHeight="43.0" prefWidth="167.0" BorderPane.alignment="CENTER">
+                     <font>
+                        <Font name="Leelawadee UI Bold" size="15.0" />
+                     </font>
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
+                     <BorderPane.margin>
+                        <Insets left="10.0" />
+                     </BorderPane.margin>
+                  </Label>
+               </left>
+               <right>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="291.0" spacing="15.0" style="-fx-background-color: #90AA86;" BorderPane.alignment="CENTER">
+                     <children>
+                          <Button fx:id="previous" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#onPreviousClick" prefHeight="27.0" prefWidth="118.0" text="Previous" textAlignment="CENTER">
+                              <font>
+                                  <Font name="Leelawadee UI Bold" size="14.0" />
+                              </font>
+                           <graphic>
+                              <ImageView fx:id="previousImage" fitHeight="22.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../GUI_Content/previous.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                          <Button fx:id="next" alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" onMouseClicked="#onNextClick" prefHeight="30.0" prefWidth="100.0" text="Next" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+                              <font>
+                                  <Font name="Leelawadee UI Bold" size="14.0" />
+                              </font>
+                           <graphic>
+                              <ImageView fx:id="nextImage" fitHeight="22.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../GUI_Content/next.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </HBox>
+               </right>
+            </BorderPane>
+         </bottom>
+         <center>
+            <BorderPane fx:id="bp2" prefHeight="410.0" prefWidth="194.0" BorderPane.alignment="CENTER">
+               <top>
+                  <HBox fx:id="hbox1" alignment="CENTER" prefHeight="45.0" prefWidth="389.0" spacing="10.0" style="-fx-background-color: #9DBF9E;" BorderPane.alignment="CENTER">
+                     <children>
+                        <ImageView fx:id="searchImage" fitHeight="20.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../GUI_Content/search.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <TextField fx:id="search" onKeyReleased="#onChangeSearch" prefHeight="26.0" prefWidth="196.0" promptText="Search">
+                           <font>
+                              <Font name="Leelawadee UI" size="12.0" />
+                           </font>
+                        </TextField>
+                        <Label fx:id="notFound" text="No Results!" textFill="#c60a0a" visible="false">
+                           <font>
+                              <Font name="Leelawadee UI Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </top>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+               <BorderPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </BorderPane.margin>
+               <center>
+                  <GridPane fx:id="gridpane1" BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <ImageView fx:id="imageView1" cache="true" fitHeight="250.0" fitWidth="380.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                     </children>
+                  </GridPane>
+               </center>
+            </BorderPane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

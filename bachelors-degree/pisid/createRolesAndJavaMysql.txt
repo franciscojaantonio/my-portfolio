@@ -1,0 +1,26 @@
+mysqladmin -u root password "abc"
+
+mysql -u root -p
+abc
+
+// Importar base de dados
+
+use mysql
+
+CREATE ROLE javaRole;
+CREATE ROLE Investigador;
+CREATE ROLE Tecnico;
+
+GRANT SELECT ON pisid.* TO javaRole, Tecnico, Investigador;
+
+GRANT UPDATE,DELETE,INSERT,ALTER ON pisid.medicao To javaRole, Tecnico;
+GRANT UPDATE,DELETE,INSERT,ALTER ON pisid.sensor To javaRole ,Tecnico;
+GRANT UPDATE,DELETE,INSERT,ALTER ON pisid.zona To javaRole, Tecnico;
+
+GRANT UPDATE,DELETE,INSERT,ALTER ON pisid.alerta To Tecnico;
+
+GRANT UPDATE,DELETE,INSERT,ALTER ON pisid.parametrocultura To Investigador;
+
+CREATE USER java@localhost IDENTIFIED BY "java";
+GRANT javaRole TO java@localhost;
+SET DEFAULT ROLE javaRole FOR java@localhost;

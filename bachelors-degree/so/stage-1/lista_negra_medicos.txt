@@ -1,0 +1,2 @@
+Maria Sousa;16384;cardiologia;sousa@gmail.com;4;8;400
+Luís Silva;32768;dentista;silva@gmail.com;3;9;150

@@ -1,0 +1,62 @@
+FUNCTION_BLOCK robot
+
+VAR_INPUT
+    esquerda : REAL;
+    centro : REAL;
+    direita : REAL;
+END_VAR
+
+VAR_OUTPUT
+    angulo : REAL;
+END_VAR
+
+FUZZIFY esquerda
+    TERM near := (0, 1) (1, 0.8) (2, 0.6) (3, 0.4) (4, 0.2) (5, 0) (6, 0) (7, 0) (8, 0) (9, 0) (10, 0); 
+    TERM medium := (0, 0) (1, 0.2) (2, 0.4) (3, 0.6) (4, 0.8) (5, 1) (6, 0.8) (7, 0.6) (8, 0.4) (9, 0.2) (10, 0);
+    TERM far := (0, 0) (1, 0) (2, 0) (3, 0) (4, 0) (5, 0) (6, 0.2) (7, 0.4) (8, 0.6) (9, 0.8) (10, 1);
+END_FUZZIFY
+
+FUZZIFY centro
+    TERM near := (0, 1) (1, 0.8) (2, 0.6) (3, 0.4) (4, 0.2) (5, 0) (6, 0) (7, 0) (8, 0) (9, 0) (10, 0); 
+    TERM medium := (0, 0) (1, 0.2) (2, 0.4) (3, 0.6) (4, 0.8) (5, 1) (6, 0.8) (7, 0.6) (8, 0.4) (9, 0.2) (10, 0);
+    TERM far := (0, 0) (1, 0) (2, 0) (3, 0) (4, 0) (5, 0) (6, 0.2) (7, 0.4) (8, 0.6) (9, 0.8) (10, 1);
+END_FUZZIFY
+
+FUZZIFY direita
+    TERM near := (0, 1) (1, 0.8) (2, 0.6) (3, 0.4) (4, 0.2) (5, 0) (6, 0) (7, 0) (8, 0) (9, 0) (10, 0); 
+    TERM medium := (0, 0) (1, 0.2) (2, 0.4) (3, 0.6) (4, 0.8) (5, 1) (6, 0.8) (7, 0.6) (8, 0.4) (9, 0.2) (10, 0);
+    TERM far := (0, 0) (1, 0) (2, 0) (3, 0) (4, 0) (5, 0) (6, 0.2) (7, 0.4) (8, 0.6) (9, 0.8) (10, 1);
+END_FUZZIFY
+
+DEFUZZIFY angulo
+    TERM strongLeft := -45;
+    TERM left := -20;
+    TERM center := 0;
+    TERM right := 20;
+    TERM strongRight := 45;
+
+    METHOD : COGS;
+    DEFAULT := 0;
+    
+END_DEFUZZIFY
+
+RULEBLOCK No1
+
+    AND : MIN;
+    ACT : MIN;
+    ACCU : MAX;
+	
+	RULE 1 : IF esquerda IS near AND (centro IS medium OR centro IS far) AND direita IS near THEN angulo IS center;
+	RULE 2 : IF esquerda IS near AND centro IS near AND direita IS near THEN angulo IS center;
+	RULE 3 : IF (esquerda IS medium OR esquerda IS far) AND centro IS near AND direita IS near THEN angulo IS strongLeft;
+	RULE 4 : IF (esquerda IS medium OR esquerda IS far) AND (centro IS medium OR centro IS far) AND direita IS near THEN angulo IS left;
+	RULE 5 : IF esquerda IS far AND centro IS near AND direita IS medium THEN angulo IS left;
+	RULE 6 : IF esquerda IS far AND centro IS near AND direita IS far THEN angulo IS right;
+	RULE 7 : IF esquerda IS medium AND centro IS near AND direita IS medium THEN angulo IS right;
+	RULE 8 : IF esquerda IS medium AND centro IS near AND direita IS far THEN angulo IS right;
+	RULE 9 : IF esquerda IS near AND centro IS near AND (direita IS medium OR direita IS far) THEN angulo IS strongRight;
+	RULE 10: IF esquerda IS near AND (centro IS medium OR centro IS far) AND (direita IS medium OR direita IS far) THEN angulo IS right;
+	
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK

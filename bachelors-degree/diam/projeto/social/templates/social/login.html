@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Social Core</title>
+    {% load static %}
+    <link rel="icon" type="image/x-icon" href="{% static 'social/images/logo.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static '/social/css/style.css' %}"/>
+</head>
+
+<body class="d-flex flex-column min-vh-100" style="background-color: hsl(0, 0%, 96%)">
+
+<section class="container center_vertical">
+
+    <main class="row gx-lg-5 align-items-center">
+
+        <aside class="col-lg-6 mb-5 mb-lg-0">
+            <h1 class="my-5 display-3 fw-bold ls-tight">
+                <img src="{% static 'social/images/logo.png' %}" alt="logo" style="width: 100px">
+                Social Core <br>
+                <span class="text-primary">A tua rede social preferida</span>
+            </h1>
+            <p style="color: hsl(217, 10%, 50.8%)">
+                Uma nova rede social que junta tudo aquilo que precisas! Fala com os teus amigos,
+                partilha momentos, comenta e reage. Tens tanto para fazer!<br>Um projeto elaborado no âmbito
+                da Unidade Curricular de Desenvolvimento para a Internet e Aplicações Móveis
+            </p>
+        </aside>
+
+        <aside class="col-lg-6 mb-5 mb-lg-0">
+            <section class="card">
+                <div class="card-body py-5 px-md-5">
+                    <!-- Login | Register -->
+                    <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <input style="width: 150px" type="button" class="nav-link active" id="pills-login-tab" data-bs-toggle="pill" data-bs-target="#pills-login" role="tab" aria-controls="pills-login" aria-selected="true" value="Login">
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <input style="width: 150px" type="button" class="nav-link" id="pills-register-tab" data-bs-toggle="pill" data-bs-target="#pills-register" role="tab" aria-controls="pills-register" aria-selected="false" value="Registar">
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="pills-tabContent" style="height: auto; margin-top: 25px">
+                        <!-- Login Tab -->
+                        <section class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="pills-login-tab">
+                            <form action="{% url 'social:fazerlogin' %}" method="post">
+                                {% csrf_token %}
+                                <h2>Login no Social Core</h2><br>
+                                <div class="form-floating">
+                                    <input type="text" name="username" class="form-control" id="floatingInput" placeholder="Username">
+                                    <label for="floatingInput">Username</label><br>
+                                </div>
+                                <div class="form-floating">
+                                    <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
+                                    <label for="floatingPassword">Password</label><br>
+                                </div>
+                                <input type="submit" class="w-100 btn-lg form-control btn btn-primary" value="Login">
+                            </form>
+                        </section>
+                        <!-- Register Tab -->
+                        <section class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="pills-register-tab">
+                            <h2>Registar no Social Core</h2><br>
+                            <form action="{% url 'social:registarutilizador' %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row g-3">
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input type="text" id="username" name="username" class="form-control" style="width: 250px" minlength="3" placeholder="Username" required>
+                                            <label for="username">Username</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input type="password" id="password" name="password" class="form-control" value="" style="width: 250px" minlength="3" placeholder="Password" required>
+                                            <label for="password">Password</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3" style="margin-top: 5px">
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input type="text" id="fname" minlength="2" name="fname" class="form-control" placeholder="First name" aria-label="First name" style="width: 250px" required>
+                                            <label for="fname">Primeiro nome</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input type="text" id="lname" minlength="2" name="lname" class="form-control" placeholder="Last name" aria-label="Last name" style="width: 250px" required>
+                                            <label for="lname">Último nome</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3" style="margin-top: 5px">
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input type="email" name="email" class="form-control" id="floatingEmail" placeholder="E-mail" required>
+                                            <label for="floatingEmail">E-mail</label><br>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input type="tel" name="tel" class="form-control" id="floatingTel" placeholder="Telemóvel" pattern="[0-9]{9}" required>
+                                            <label for="floatingTel">Telemóvel</label><br>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col">
+                                        <label for="dataaniv" class="form-label">Data de nascimento</label>
+                                        <input id="dataaniv" type="date" class="form-control" name="dataaniv" style="width: 250px" required>
+                                    </div>
+                                    <div class="col">
+                                        <label for="list" class="form-label">Género</label>
+                                        <input id="list" class="form-control" name="gender" list="gender" required>
+                                        <datalist id="gender">
+                                            <option value="Masculino">
+                                            <option value="Feminino">
+                                            <option value="Outro">
+                                        </datalist>
+                                    </div>
+                                </div>
+                                <div class="row g-3" style="margin-top: 5px">
+                                    <div class="col">
+                                        <label for="myfile" class="form-label">Imagem de perfil (Opcional)</label>
+                                        <input type="file" name="myfile" id="myfile" class="form-control">
+                                    </div>
+                                </div>
+                                <input type="submit" value="Registar" class="w-100 btn-lg form-control btn btn-primary" style="margin-top: 20px">
+                            </form>
+                        </section>
+                    </div>
+                </div>
+            </section>
+            {% if msg_successful_registration %}
+                <div class="alert alert-info alert-dismissible fade show text-center" style="margin-top: 40px">
+                    <strong>{{ msg_successful_registration }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endif %}
+            {% if msg_invalid_registration %}
+                <div class="alert alert-warning alert-dismissible fade show text-center" style="margin-top: 40px">
+                    <strong>{{ msg_invalid_registration }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endif %}
+            {% if msg_invalid_input %}
+                <div class="alert alert-warning alert-dismissible fade show text-center" style="margin-top: 40px">
+                    <strong>{{ msg_invalid_input }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endif %}
+        </aside>
+
+    </main>
+
+</section>
+
+<footer class="footer mt-auto text-center p-3" style="background-color: #e5e5e5">
+    <p class="text-muted center_vertical">© 2022 Social Core - Desenvolvimento para a Internet e Aplicações Móveis</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</body>
+</html>

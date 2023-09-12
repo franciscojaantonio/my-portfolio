@@ -1,0 +1,3 @@
+Francisco 40 2 
+Viriato 49 2 
+Rodrigo 57 2 

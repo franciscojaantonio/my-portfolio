@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends "social/main_page.html" %}
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% block content %}
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <input class="nav-link active" id="nav-user-tab" data-bs-toggle="tab" data-bs-target="#nav-user" type="button" role="tab" aria-controls="nav-user" aria-selected="true" value="Dados do utilizador">
+            <input class="nav-link" id="nav-amigos-tab" data-bs-toggle="tab" data-bs-target="#nav-amigos" type="button" role="tab" aria-controls="nav-amigos" aria-selected="false" value="Amigos">
+            <input class="nav-link" id="nav-dados-tab" data-bs-toggle="tab" data-bs-target="#nav-dados" type="button" role="tab" aria-controls="nav-dados" aria-selected="false" value="Alterar dados">
+        </div>
+    </nav>
+    <section class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-user" role="tabpanel" aria-labelledby="nav-user-tab">
+            <!-- Utilizador -->
+            <article class="py-3" style="margin-top: 20px">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="{% static request.user.utilizador.imageUrl %}" class="img-fluid rounded-start" alt="">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Nome: {{ request.user.first_name }} {{ request.user.last_name }}</h5>
+                            <p class="card-text">Biografia: {{ request.user.utilizador.biografia }}</p>
+                            <p class="card-text"><br>Publicações: {{ request.user.utilizador.pubs }}<br>Amigos: {{ request.user.utilizador.amigos }}</p>
+                            <p class="card-text"><small class="text-muted">Data de nascimento: {{ request.user.utilizador.birthday }}</small></p>
+                            {% if request.user.utilizador.private %}
+                                <p class="card-text"><small class="text-muted">A sua conta é privada</small></p>
+                            {% else %}
+                                <p class="card-text"><small class="text-muted">A sua conta é pública</small></p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="tab-pane fade" id="nav-amigos" role="tabpanel" aria-labelledby="nav-amigos-tab">
+            <!-- Amigos -->
+            {% if friends_list %}
+                <table class="table caption-top mt-2 text-center">
+                    <caption>Lista de todos os amigos<br>(Clique na imagem de um utilizador para ver o seu perfil)
+                        <div class="input-group mb-3 float-end" style="width: 250px;">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input id="myInput" class="form-control ds-input float-end" type="text" placeholder="Procurar..">
+                        </div>
+                    </caption>
+                    <thead>
+                    <tr>
+                        <th>Imagem</th>
+                        <th>Primeiro nome</th>
+                        <th>Último nome</th>
+                        <th>Remover amigo</th>
+                    </tr>
+                    </thead>
+                    <tbody id="myTable">
+                    {% for friend in friends_list %}
+                        <tr>
+                            <td><a href="{% url 'social:ver_perfil_utilizador' friend.id %}"><img src="{% static friend.imageUrl %}" width="60" class="rounded me-2"></a></td>
+                            <td>{{ friend.user.first_name }}</td>
+                            <td>{{ friend.user.last_name }}</td>
+                            <td>
+                                <form action="{% url 'social:remover_amizade' friend.id %}">
+                                    <input type="submit" class="btn btn-secondary" href="" value="Remover amigo">
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="text-center py-2 alert alert-info" style="margin-top: 20px" role="alert">
+                    <h4>Ainda não tem amigos. Encontre pessoas <a href="{% url 'social:encontrar_amigos' %}">aqui</a></h4>
+                </div>
+            {% endif %}
+        </div>
+        <div class="tab-pane fade" id="nav-dados" role="tabpanel" aria-labelledby="nav-dados-tab">
+            <form class="mx-auto" method="post" action="{% url 'social:alterar_dados'  %}" style="margin-top: 40px; width: 80%">
+                {% csrf_token %}
+                <label for="textarea" class="form-label">Alterar biografia</label>
+                <textarea name="textarea" style="max-height: 175px; height: 90px" class="form-control" id="textarea" minlength="2" required>{% if request.user.utilizador.biografia %}{{ request.user.utilizador.biografia }}{% else %}{% endif %}</textarea>
+                <input type="submit" class="btn btn-outline-primary text-primary" value="Alterar">
+            </form>
+            <form class="mx-auto" method="post" action="{% url 'social:alterar_imagem_perfil' %}" enctype="multipart/form-data" style="margin-top: 30px; width: 80%">
+                {% csrf_token %}
+                <label for="myfile" class="form-label">Alterar foto de perfil</label>
+                <input type="file" name="new_image" id="myfile" class="form-control">
+                <input type="submit" class="btn btn-outline-primary" value="Alterar imagem">
+            </form>
+            <section class="text-center p-3">
+                {% if request.user.utilizador.private %}
+                    <p>A sua conta é privada <a href="{% url 'social:definir_privacidade' %}" class="btn btn-primary" style="text-decoration: none">Definir como pública</a></p>
+                {% else %}
+                    <p>A sua conta é pública <a href="{% url 'social:definir_privacidade' %}" class="btn btn-primary" style="text-decoration: none">Definir como privada</a></p>
+                {% endif %}
+            </section>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+
+            $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+        });
+    </script>
+{% endblock %}
+
+</body>
+</html>
