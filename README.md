@@ -1,2 +1,2 @@
 # my-portfolio
-Repository with my university projects
+Repository with some of my university projects
