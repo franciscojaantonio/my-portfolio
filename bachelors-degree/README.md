@@ -1,1 +1,1 @@
-### Projects developed during my Bachelor's Degree [2019 - 2021]
+### :man_student: Projects developed during my Bachelor's Degree [2019 - 2021]
