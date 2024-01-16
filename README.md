@@ -17,3 +17,5 @@
 - [Mobile and Ubiquitous Computing](./masters-degree/cmu)
 - [Advanced Programming](./masters-degree/pava)
 - [Highly Dependable Systems](./masters-degree/sec)
+- [Design and Implementation of Distributed Applications](./masters-degree/dad)
+- [Network and Computer Security](./masters-degree/sirs)
