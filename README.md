@@ -7,7 +7,7 @@
 - [Artificial Intelligence](./bachelors-degree/ia)
 - [Programming Introduction](./bachelors-degree/ip)
 - [Concurrent and Distributed Programming](./bachelors-degree/pcd)
-- [Distributed Information Systems](./bachelors-degree/pisid)
+- [Distributed Information System](./bachelors-degree/pisid)
 - [Object Oriented Programming](./bachelors-degree/poo)
 - [Functional Programming](./bachelors-degree/ppm)
 - [Operating Systems](./bachelors-degree/so)
