@@ -1,0 +1,54 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "TransactionManager";
+
+import "Protos/DADTKVTransactionManager.proto";
+
+/*** Used for communication between Transaction Managers ***/
+service TransactionManagerInnerService {
+	rpc Update(UpdateRequest) returns (UpdateReply);
+	rpc Commit(CommitRequest) returns (CommitReply);
+	rpc AskRelease(AskRequest) returns (AskReply);
+	rpc LeaseRelease(LeaseReleaseRequest) returns (LeaseReleaseReply);
+}
+
+message UpdateRequest {
+	string updaterId = 1;
+	int32 timeSlot = 2;
+}
+
+message UpdateReply {
+	string updatedId = 1;
+	bool accepted = 2;
+}
+
+message CommitRequest {
+	string commiterId = 1;
+	repeated DadInt objects = 2;
+	repeated string keys = 3;
+	int32 timeSlot = 4;
+}
+
+message CommitReply {
+	string commitedId = 1;
+	bool commited = 2;
+}
+
+message AskRequest {
+	int32 round = 1;
+}
+
+message AskReply {
+	bool ack = 1;
+}
+
+message LeaseReleaseRequest {
+	string ownerId = 1;
+	int32 slot = 2;
+	repeated string keys = 3;
+}
+
+message LeaseReleaseReply {
+	string receiverId = 1;
+	bool accepted = 2;
+}

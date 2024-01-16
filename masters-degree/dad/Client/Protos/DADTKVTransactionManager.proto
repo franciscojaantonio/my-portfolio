@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option csharp_namespace = "Client";
+
+// Transaction Manager services
+service TransactionManagerService {
+    rpc TransactionSubmit (TransactionRequest) returns (TransactionReply);
+    rpc Status (StatusTMRequest) returns (StatusTMReply);
+}
+
+/*** Data types ***/
+/*
+    int32 should be enough
+*/
+message DadInt {
+    string key = 1;
+    int32 value = 2;
+}
+
+/*** Client side ***/
+
+// The request message from Client.
+message TransactionRequest {
+    string client = 1;
+    repeated string toReadList = 2;
+    repeated DadInt toWriteList = 3;
+}
+
+// The response message to Client.
+/*
+    If transaction is aborted => return List<DadInt>([{key = 'abort', value = ''}])
+*/
+message TransactionReply {
+    repeated DadInt readList = 1;
+}
+
+message StatusTMRequest { }
+
+message StatusTMReply { }

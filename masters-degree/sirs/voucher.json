@@ -1,0 +1,9 @@
+{
+    "mealVoucher": {
+        "code": "VOUCHER123",
+        "description": "Redeem this code for a 20% discount in the meal. Drinks not included."
+    },
+    "owner": "alice",
+    "previousOwner" : "Dona Maria",
+    "restaurant": "Dona Maria"
+}

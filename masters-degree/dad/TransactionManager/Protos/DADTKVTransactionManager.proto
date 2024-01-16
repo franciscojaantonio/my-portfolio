@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option csharp_namespace = "TransactionManager";
+
+import "Protos/DADTKVPaxos.proto";
+
+/*** Transaction Manager services ***/
+service TransactionManagerService {
+    rpc TransactionSubmit (TransactionRequest) returns (TransactionReply);
+    rpc LeasesAcquisition (LearnRequest) returns (Ack);
+    rpc Status (StatusTMRequest) returns (StatusTMReply);
+}
+
+/*** Data types ***/
+message DadInt {
+    string key = 1;
+    int32 value = 2;
+}
+
+/*** Messages ***/
+message TransactionRequest {
+    string client = 1;
+    repeated string toReadList = 2;
+    repeated DadInt toWriteList = 3;
+}
+
+message TransactionReply {
+    repeated DadInt replyList = 1;
+}
+
+message LearnRequest {
+    int32 slot = 1;
+    repeated Lease value = 2;
+}
+
+message StatusTMRequest { }
+
+message StatusTMReply { }

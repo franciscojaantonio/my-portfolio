@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option csharp_namespace = "Client";
+
+/*** Paxos services ***/
+service PaxosManagerService {
+    rpc Status (StatusLMRequest) returns (StatusLMReply);
+}
+
+message StatusLMRequest { }
+
+message StatusLMReply { }

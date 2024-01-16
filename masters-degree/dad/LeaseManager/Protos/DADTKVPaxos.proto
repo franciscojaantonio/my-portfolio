@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+option csharp_namespace = "LeaseManager";
+
+/*** Paxos services ***/
+service PaxosManagerService {
+    rpc RequestLease (LeaseRequest) returns (Ack);
+    rpc Prepare (PrepareRequest) returns (Promise);
+    rpc Accept (AcceptRequest) returns (Accepted);
+    rpc Learn (Accepted) returns (Ack);
+    rpc Status (StatusLMRequest) returns (StatusLMReply);
+}
+
+/*** Data types ***/
+message DadInt {
+    string key = 1;
+    int32 value = 2;
+}
+
+message Lease {
+    string requester = 1;
+    repeated string keys = 2;
+}
+
+/*** Messages ***/
+message LeaseRequest {
+	string requester = 1;
+	repeated string keys = 2;
+}
+
+message PrepareRequest{
+    int32 proposer = 1; 
+}
+
+message Promise {
+    bool isPromised = 1;
+    int32 promisedTo = 2;
+    repeated Lease value = 3;
+}
+
+message AcceptRequest {
+    int32 proposer = 1;
+    repeated Lease value = 2;
+}
+
+message Accepted {
+    bool isAccepted = 1;
+    int32 acceptedFrom = 2;
+    repeated Lease value = 3;
+}
+
+message Ack { }
+
+message StatusLMRequest { }
+
+message StatusLMReply { }
